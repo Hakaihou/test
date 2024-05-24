@@ -1,22 +1,487 @@
-@use '../core/config/scss' as config;
-@use '../core/lib/scss' as lib;
+@use '../../config/scss/index.scss' as config;
+@use '../../lib/scss/index.scss' as lib;
 
-.layout {
-  display: flex;
-  min-height: 200vh;
-  flex-direction: column;
 
-  &__header {
-    position: sticky;
-    top: 0;
+body {
+  font-family: config.$font-primary;
+
+  & a {
+    text-decoration: none;
+  }
+}
+
+.main-container {
+  width: 1489px;
+  height: 1140px;
+  box-sizing: border-box;
+  padding: 22px 37px 0 28px;
+  background: config.$colors-background-main;
+  margin: 0 auto;
+
+  .header {
+    @include lib.flex-row;
+    align-items: center;
+    gap: config.$tokens-space-component-gap-large;
+
+    .logo {
+      font-weight: config.$font-bold;
+      font-size: 30px;
+      color: config.$colors-white;
+    }
+
+    .search-form {
+      position: relative;
+
+      .search-form__input {
+        border-radius: config.$tokens-border-radius-global-border-radius-150;
+        background-color: config.$colors-background-main;
+        width: 469px;
+        height: 48px;
+        border: 1px solid #959595;
+        padding: 12px 176px 12px 49px;
+        color: white;
+        transition: 0.3s all;
+
+        &:focus-visible {
+          border: 1px solid #84D52C5B;
+          outline: none;
+        }
+      }
+
+      & svg {
+        position: absolute;
+        left: 20px;
+        top: 29%;
+      }
+    }
+
+    .checkboxes {
+      @include lib.flex-row;
+      gap: 10px;
+
+      .checkboxes__item {
+        position: relative;
+        height: 48px;
+        @include lib.flex-row;
+        @include lib.flex-center;
+        padding: 12px 20px;
+        border-radius: 10px;
+        z-index: 1;
+        color: white;
+        font-size: config.$font-size_lg;
+        font-weight: config.$font-bold;
+        gap: 10px;
+        box-sizing: border-box;
+        cursor: pointer;
+        transition: 0.3s all;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border: 1px solid transparent;
+          border-radius: inherit;
+          background-image: linear-gradient(config.$colors-unactive-input, config.$colors-unactive-input),
+          linear-gradient(174.36deg, rgba(132, 213, 44, 0.36) 11.39%, rgba(23, 23, 34, 0) 189.78%);
+          background-origin: border-box;
+          background-clip: content-box, border-box;
+          pointer-events: none;
+          z-index: -1;
+        }
+      }
+
+      .checkboxes__item--active {
+        box-shadow: 0px 3px 15px 0px #84D52C33;
+
+        &::before {
+          background-image: linear-gradient(config.$colors-card-info-background, config.$colors-card-info-background),
+          linear-gradient(174.36deg, rgba(132, 213, 44, 0.36) 11.39%, rgba(23, 23, 34, 0) 189.78%);
+        }
+      }
+    }
   }
 
+  section.slider-section {
+    @include lib.flex-row;
+    margin-top: 30px;
+    gap: 33px; //увеличенный gap в связи со спецификой работы noUiSlider (при наличии отступа на панели с ползунком, так же страдает и окрашенная область)
 
-  &__main {
-    flex-grow: 1;
+    .range__title {
+      color: config.$colors-general-body-font;
+      line-height: 22px;
+      margin-bottom: 23px;
+      font-weight: 600;
+    }
+
+    .formatting-slider {
+      width: 225px;
+      height: 4px;
+      padding-right: 8px;
+      box-sizing: border-box;
+      box-shadow: 0px 3px 15px 0px #84D52C4F;
+    }
+
+    .responsive-input {
+      @include lib.flex-row;
+      justify-content: space-between;
+
+      .responsive-input__item {
+        font-size: 14px;
+        height: 20px;
+        padding: 0 2px;
+        min-width: 35px;
+        max-width: 55px;
+        box-sizing: border-box;
+        background: config.$colors-card-info-background;
+        border: 1px solid config.$colors-outlined-background;
+        border-radius: 3px;
+        color: config.$colors-unactive-body-form;
+        margin-top: 15px;
+        text-align: center;
+        transition: 0.3s all;
+
+        &:focus-visible {
+          outline: none;
+          border: 1px solid #84D52C5B;
+        }
+      }
+
+      .responsive-input__item--right {
+        float: right;
+      }
+    }
+
+    .THC-range {
+      max-width: max-content;
+
+      .formatting-slider {
+        width: 217px; //уменьшен размер из-за увеличенного gap, см. комментарий выше
+      }
+
+      .responsive-input {
+        display: block;
+      }
+    }
+
+    .CBD-range {
+      max-width: max-content;
+
+      .formatting-slider {
+        width: 217px; //уменьшен размер из-за увеличенного gap, см. комментарий выше
+      }
+
+      .responsive-input {
+        display: block;
+      }
+    }
+
+    .nose-scale {
+      @include lib.flex-col;
+      justify-content: end;
+      margin-bottom: 6px;
+
+      .range__title {
+        margin-bottom: 5px;
+      }
+
+      .nose-scale__container {
+        @include lib.flex-row;
+        gap: 5px;
+
+        .radio__container {
+
+          .radio__button {
+            opacity: 0;
+            position: absolute;
+          }
+
+          .radio__label {
+            position: relative;
+            @include lib.flex-row;
+            align-items: end;
+            cursor: pointer;
+            height: 26px;
+          }
+
+          .bar {
+            width: 4px;
+            height: 20px;
+            background-color: yellow;
+            transition: 0.3s all;
+          }
+
+          .bar__green {
+            background-color: green;
+          }
+
+          .bar__1 {
+            background-color: #f1d56d;
+          }
+
+          .bar__2 {
+            background-color: #ede967;
+          }
+
+          .bar__3 {
+            background-color: #d2ed67;
+          }
+
+          .bar__4 {
+            background-color: #aded67;
+          }
+
+          .bar__5 {
+            background-color: #88ed67;
+          }
+        }
+      }
+
+      .nose-scale__labels {
+        @include lib.flex-row;
+        justify-content: space-between;
+
+        & p {
+          font-size: 12px;
+          color: config.$colors-unactive-body-form;
+          line-height: 16px;
+        }
+
+      }
+    }
+
+    .drop-down {
+      margin: auto 0 auto auto;
+      position: relative;
+
+      .drop-down__button {
+        position: relative;
+        height: 48px;
+        width: 48px;
+        z-index: 1;
+        border-radius: 10px;
+        padding: 12px;
+        cursor: pointer;
+
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border: 1px solid transparent;
+          border-radius: inherit;
+          background-image: linear-gradient(config.$colors-unactive-input, config.$colors-unactive-input),
+          linear-gradient(174.36deg, rgba(132, 213, 44, 0.36) 11.39%, rgba(23, 23, 34, 0) 189.78%);
+          background-origin: border-box;
+          background-clip: content-box, border-box;
+          pointer-events: none;
+          z-index: -1;
+        }
+      }
+
+      .drop-down__menu {
+        padding: 20px;
+        background: config.$colors-card-info-background;
+        color: config.$colors-general-body-font;
+        line-height: 22px;
+        @include lib.flex-col;
+        gap: 10px;
+        border-radius: 10px;
+        box-shadow: 0px 10px 25px 0px #0F0F17A1;
+        position: absolute;
+        right: 0px;
+        top: 65px;
+        width: max-content;
+        opacity: 1;
+        pointer-events: auto;
+        transition: opacity 0.3s ease;
+
+        .sort-by__title {
+
+        }
+
+        .sort-by__item {
+          position: relative;
+          @include lib.flex-row;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+
+          .sort-by__arrow--up {
+            position: absolute;
+            bottom: -35px;
+            left: -34px;
+          }
+
+          .sort-by__arrow--down {
+            position: absolute;
+            bottom: -10.5px;
+            left: 10.5px;
+          }
+        }
+      }
+    }
+
   }
 
-  &__footer {
-    margin-top: auto;
+  section.filters-section {
+    color: config.$colors-general-body-font;
+    margin-top: 15px;
+
+    .filters--on__container {
+      @include lib.flex-row;
+      gap: 30px;
+      align-items: center;
+      min-height: 28px;
+
+      & span {
+        line-height: 22px;
+      }
+
+      .filters--on__flex {
+        @include lib.flex-row;
+        gap: 10px;
+
+        .filters--on {
+          font-size: 12px;
+          background-color: config.$colors-hashtags;
+          line-height: 16px;
+          @include lib.flex-row;
+          @include lib.flex-center;
+          padding: 5px 6px; //Уменьшенный горизонтальный padding, т.к. ширина блока не соответствует размеру из-за пробела между элементами, на фигме он меньше, чем по факту
+          border-radius: 20px;
+          cursor: context-menu;
+          max-height: 28px;
+
+          .filters--close {
+            cursor: pointer;
+            margin-bottom: 2px;
+          }
+        }
+      }
+    }
+
+    .filters__container {
+      position: relative;
+      width: 243px;
+      height: 738px;
+      border-radius: 10px;
+      z-index: 1;
+      margin-top: 30px;
+      box-sizing: border-box;
+      padding: 15px 22px 30px 17px;
+      @include lib.flex-col;
+      gap: 15px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 1px solid transparent;
+        border-radius: inherit;
+        background-image: linear-gradient(config.$colors-unactive-input, config.$colors-unactive-input),
+        linear-gradient(174.36deg, rgba(132, 213, 44, 0.36) 11.39%, rgba(23, 23, 34, 0) 189.78%);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .background-image {
+        position: absolute;
+        height: 219px;
+        width: 104px;
+        top: 32%;
+        left: 0;
+        pointer-events: none;
+      }
+
+      .filters__category {
+
+        .filters__item {
+          @include lib.flex-col;
+          line-height: 24px;
+          gap: 10px;
+
+          .filters__item--toggle {
+            @include lib.flex-row;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+
+            .filters__item__title {
+              line-height: 24px;
+              font-size: config.$font-size-lg;
+            }
+
+            .filters__item__icon {
+              transition: 0.3s all
+            }
+
+            .rotated {
+              transform: rotate(180deg);
+            }
+          }
+
+
+          .filters__item__wrapper {
+            @include lib.flex-col;
+            gap: 5px;
+
+            .filters__item__container {
+              @include lib.flex-row;
+              align-items: center;
+              color: config.$colors-unactive-body-form;
+
+              & input,
+              label {
+                cursor: pointer;
+              }
+
+              & label {
+                display: flex;
+                align-items: center;
+              }
+
+              & label::before {
+                content: '';
+                display: inline-block;
+                width: 15px;
+                height: 15px;
+                border: 1px solid config.$colors-unactive-body-form;
+                border-radius: 2px;
+                margin-right: 5px;
+                box-sizing: border-box;
+              }
+
+              .checkbox {
+                display: none;
+              }
+
+
+              .checkbox:checked + label::before {
+                background: url("data:image/svg+xml,%3csvg width='10' height='8' viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M4.09227 7.45034C3.93492 7.45022 3.77914 7.41898 3.63392 7.3584C3.48869 7.29783 3.35689 7.20913 3.24609 7.0974L0.981973 4.83328C0.868444 4.72271 0.778013 4.59068 0.71593 4.44487C0.653847 4.29906 0.62135 4.14237 0.620325 3.9839C0.619301 3.82542 0.649769 3.66832 0.709961 3.52172C0.770153 3.37512 0.85887 3.24194 0.970959 3.12991C1.08305 3.01788 1.21628 2.92923 1.36291 2.86911C1.50954 2.809 1.66666 2.77861 1.82513 2.77972C1.9836 2.78083 2.14028 2.81341 2.28606 2.87556C2.43183 2.93772 2.56381 3.02822 2.67433 3.14181L4.09227 4.56063L7.91109 0.741809C8.13551 0.517389 8.43989 0.391312 8.75727 0.391312C9.07464 0.391312 9.37902 0.517389 9.60344 0.741809C9.82786 0.966229 9.95394 1.27061 9.95394 1.58799C9.95394 1.90536 9.82786 2.20974 9.60344 2.43416L4.93491 7.09916C4.71148 7.32299 4.40852 7.44925 4.09227 7.45034Z' fill='white'/%3e%3c/svg%3e") no-repeat center center,
+                linear-gradient(266.56deg, rgba(107, 171, 43, 0.2) 0%, rgba(132, 213, 44, 0) 94.16%),
+                linear-gradient(0deg, #84D52C, #b2ff5e);
+                border: none;
+              }
+
+              .checkbox:checked + label {
+                color: config.$colors-general-body-font;
+                transition: 0.3s all;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
